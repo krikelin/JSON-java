@@ -59,7 +59,7 @@ public class JSONSerializer {
 	/***
     Serialize Any class into a JSON object
     ***/
-    public JSONObject deserialize(Object object) {
+    public JSONObject serialize(Object object) {
         JSONObject newObject = new JSONObject();
         Field[] fields = object.getClass().getDeclaredFields();
         for(int i = 0; i < fields.length; i++) {
