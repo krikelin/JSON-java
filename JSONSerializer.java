@@ -60,56 +60,55 @@ public class JSONSerializer {
     Serialize Any class into a JSON object
     ***/
     public JSONObject serialize(Object object) {
-        JSONObject newObject = new JSONObject();
-        Field[] fields = object.getClass().getDeclaredFields();
-        for(int i = 0; i < fields.length; i++) {
-            Field field = fields[i];
-            try {
-                String name = field.getName();
-                if(name.startsWith("this"))
-                    continue;
-                String newName = radiate(field.getName());
-                //newObject.put(method.getName(),  method.invoke(object));
-                Class<?> _class = field.getType();
-                Method method = object.getClass().getMethod("get" + newName);
-                Object member = method.invoke(object);
-                if(member.getClass().isArray()) {
-                    JSONArray array = new JSONArray();
-                    Object[] collection = (Object[])member;
-                    for(Object _object: collection) {
-                        if(_object instanceof String || _object instanceof Float || _object instanceof Float || _object instanceof Integer) {
-                            array.put(object);
-                        } else if(_object instanceof Object) {
-                            array.put(this.deserialize(_object));
-                        } else {
-                            array.put(_object);
-                        }
-                    } 
-                    newObject.put(name, array);
-                } else if(member instanceof String || member instanceof Float || member instanceof Float || member instanceof Integer) {
-                    newObject.put(name, member);
-                } else if(member instanceof Object) {
-                    newObject.put(name, this.deserialize(member));
-                } else {
-                    newObject.put(name, member);
-                }
-            } catch (IllegalArgumentException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (JSONException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-        return newObject;
-    }
+		JSONObject newObject = new JSONObject();
+		Field[] fields = object.getClass().getDeclaredFields();
+		for(int i = 0; i < fields.length; i++) {
+			
+			Field field = fields[i];
+			
+			try {
+			
+				String name = field.getName();
+				if(name.startsWith("this"))
+					continue;
+				String newName = radiate(field.getName());
+				//newObject.put(method.getName(),  method.invoke(object));
+				Class<?> _class = field.getType();
+				Method method = object.getClass().getMethod("get" + newName);
+				Object member = method.invoke(object);
+				if(member.getClass().isArray()) {
+					JSONArray array = new JSONArray();
+					Object[] collection = (Object[])member;
+					for(Object __object: collection) {
+						array.put(serialize(__object));
+					} 
+					newObject.put(newName, array);
+				} else if(member instanceof String || member instanceof Float || member instanceof Float || member instanceof Integer) {
+					newObject.put(newName, member);
+				} else if(member instanceof Object) {
+					
+					newObject.put(newName, serialize(member));
+				} 
+			//	newObject.put(name, this.serialize(member));
+				
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		return newObject;
+	}
 }
